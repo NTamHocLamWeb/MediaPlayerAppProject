@@ -1,0 +1,176 @@
+﻿<Window x:Class="MediaPlayerApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MediaPlayerApp"
+        xmlns:fa="clr-namespace:FontAwesome.Sharp;assembly=FontAwesome.Sharp"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="500" Width="800" WindowStartupLocation="CenterScreen">
+    <Grid Background="#1B1A17">
+        <Button x:Name="MusicButton" Content="Music" HorizontalAlignment="Left" Height="35" Margin="70,27,0,0" VerticalAlignment="Top" Width="90" Click="MusicButton_Click"/>
+        <Button x:Name="VideoButton" Content="Video" HorizontalAlignment="Left" Height="35" Margin="165,27,0,0" VerticalAlignment="Top" Width="90" Click="VideoButton_Click"/>
+        <Button x:Name="AddNewButton" Content="Add new" HorizontalAlignment="Left" Height="30" Margin="662,29,0,0" VerticalAlignment="Top" Width="64" Background="LightGreen" FontWeight="Bold" Click="AddNewButton_Click"/>
+        <DataGrid x:Name="ListDataGrid" HorizontalAlignment="Center" 
+                  Height="252" Margin="0,64,0,0" VerticalAlignment="Top" 
+                  Width="660" AutoGenerateColumns="False" CanUserAddRows="False" 
+                  CanUserDeleteRows="False" CanUserResizeColumns="False" CanUserReorderColumns="False"
+                  CanUserResizeRows="False"
+                  Background="Transparent" 
+                  BorderBrush="Transparent" GridLinesVisibility="None" 
+                  RowHeaderWidth="0" ColumnHeaderHeight="0" 
+                  PreviewMouseLeftButtonDown="ListDataGrid_PreviewMouseLeftButtonDown"
+                  PreviewMouseMove="ListDataGrid_PreviewMouseMove"
+                  MouseMove="ListDataGrid_MouseMove"
+                  Drop="ListDataGrid_Drop"
+                  DragOver="ListDataGrid_DragOver"
+                  AllowDrop="True" SelectionChanged="ListDataGrid_SelectionChanged"
+                  IsReadOnly="True" MouseDoubleClick="ListDataGrid_MouseDoubleClick"
+                  SelectionMode="Single" SelectionUnit="FullRow">
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="Background" Value="#3C3D37"/>
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="Height" Value="40"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="Margin" Value="0,0,0,2"/>
+
+                </Style>
+            </DataGrid.RowStyle>
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Name}" Width="*"/>
+                <DataGridTextColumn Binding="{Binding Duration}" Width="Auto"/>
+                <DataGridTemplateColumn Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button x:Name="DeleteButton" Content="Delete" Click="Delete_Button_Click"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+
+        </DataGrid>
+           
+        <StatusBar x:Name="ControlsStatusBar" HorizontalAlignment="Center" Padding="10,10,10,10" Margin="0,350,0,0" VerticalAlignment="Top" MouseMove="StatusBar_MouseMove"  Width="780" Background="#222831">
+            <StatusBar.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="70"/>
+                        </Grid.RowDefinitions>
+                    </Grid>
+                </ItemsPanelTemplate>
+            </StatusBar.ItemsPanel>
+            <StatusBarItem Grid.Row="0">
+                <TextBlock Name="CountTimeTextBlock" Foreground="White">00:00:00</TextBlock>
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="1" HorizontalContentAlignment="Stretch" Grid.Row="0" Grid.ColumnSpan="7">
+                <ProgressBar Name="TimeProgressBar" Height="2" MouseDown="TimeProgressBar_MouseDown" MouseMove="TimeProgressBar_MouseMove" MouseLeave="TimeProgressBar_MouseLeave" MouseUp="TimeProgressBar_MouseUp" ValueChanged="TimeProgressBar_ValueChanged"/>
+
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="8" Grid.Row="0" HorizontalAlignment="Right">
+                <TextBlock Name="DurationTextBlock" Foreground="White">00:00:00</TextBlock>
+            </StatusBarItem>
+
+            <!-- StatusBarItem chứa Grid -->
+
+            <StatusBarItem Grid.Column="1" Grid.Row="1"  VerticalAlignment="Top">
+                <TextBlock Name="TitleTextBlock" Foreground="White" VerticalAlignment="Top" FontWeight="ExtraBold"></TextBlock>
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="2" VerticalAlignment="Center" Grid.Row="1" HorizontalAlignment="Left" Height="34" Margin="59,0,0,0">
+                <Button x:Name="TypeLoopButton" BorderBrush="Transparent" Background="Transparent" Click="TypeLoopButton_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <fa:IconBlock FontSize="15" Icon="Repeat" Foreground="White" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="3" Grid.Row="1" HorizontalAlignment="Right">
+                <Button x:Name="PreviousButton" BorderBrush="Transparent" Background="Transparent" Click="PreviousButton_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <fa:IconBlock x:Name="PreviousIconBlock" FontSize="30" Icon="Backward" Foreground="White" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="4" Grid.Row="1" HorizontalAlignment="Center">
+                <Button x:Name="PlayAndPauseButton" BorderBrush="Transparent" Background="Transparent" Click="PlayAndPauseButton_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <fa:IconBlock x:Name="PlayAndPauseIconBlock" FontSize="50" Icon="PlayCircle" Foreground="White" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="5" Grid.Row="1">
+                <Button x:Name="NextButton" BorderBrush="Transparent" Background="Transparent" Click="NextButton_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <fa:IconBlock x:Name="NextIconBlock" FontSize="30" Icon="Forward" Foreground="White" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="6" VerticalAlignment="Center" Grid.Row="1" HorizontalAlignment="Left" Height="35">
+                <Button x:Name="TypePlayButton" BorderBrush="Transparent" Background="Transparent" Click="TypePlayButton_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <fa:IconBlock FontSize="15" Icon="Random" Foreground="White" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="7" Grid.Row="1" HorizontalAlignment="Left" Height="60" Margin="40,0,0,0">
+                <Button x:Name="SoundButton" BorderBrush="Transparent" Height="35" Width="35" Background="Transparent" Click="SoundButton_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <fa:IconBlock FontSize="15" Icon="VolumeUp" Foreground="White" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+            </StatusBarItem>
+
+            <StatusBarItem Grid.Column="8" Grid.Row="1"  HorizontalAlignment="Right">
+                <Button x:Name="FullScreenButton" BorderBrush="Transparent" Background="Transparent"  Height="35" Width="35" Click="FullScreenButton_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <fa:IconBlock FontSize="20" Icon="Expand" Foreground="White" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+            </StatusBarItem>
+        </StatusBar>
+
+        <Image x:Name="DefaultImage" 
+HorizontalAlignment="Center" 
+VerticalAlignment="Center"/>
+
+        <!-- MediaElement trong Viewbox -->
+        <Viewbox x:Name="ScreenViewbox" 
+  HorizontalAlignment="Left" 
+  VerticalAlignment="Top"
+                  Height="60" Width="110" Margin="10,395,0,0">
+            <MediaElement x:Name="PlaylistMediaElement"
+           LoadedBehavior="Manual"
+           MouseMove="StatusBar_MouseMove"
+           MediaEnded="NextPlay_MediaEnded"
+           Stretch="Uniform"
+           RenderTransformOrigin="0.5,0.5"
+                           >
+                <MediaElement.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform ScaleY="1"/>
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </MediaElement.RenderTransform>
+            </MediaElement>
+        </Viewbox>
+
+        <Slider x:Name="VolumeSlider" Minimum="0" Maximum="1"  Value="0.8"  Width="17" Orientation="Vertical" Margin="662,281,121,89" ValueChanged="VolumeSlider_ValueChanged" Background="Black" Visibility="Hidden" RenderTransformOrigin="0.533,0.506"/>
+        
+
+    </Grid>
+</Window>
